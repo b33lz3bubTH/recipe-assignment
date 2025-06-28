@@ -18,7 +18,6 @@ function App() {
   const { initializeAuth } = useAuthStore();
 
   useEffect(() => {
-    // Initialize authentication state from localStorage
     initializeAuth();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -33,7 +32,6 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/recipes/:id" element={<RecipeDetailPage />} />
             <Route path="/toast-demo" element={<ToastDemo />} />
-            {/* Protected routes - will be implemented later */}
             
             <Route 
               path="/add-recipe" 
@@ -56,7 +54,6 @@ function App() {
           </Routes>
         </main>
         
-        {/* Toast Container for notifications */}
         <ToastContainer
           position="top-right"
           autoClose={5000}

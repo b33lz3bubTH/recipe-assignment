@@ -15,7 +15,6 @@ const EditRecipePage = () => {
   const [initialData, setInitialData] = useState(null);
   const { fetchRecipeById, clearCurrentRecipe } = useRecipeStore();
 
-  // JSON Schema for the recipe form (same as AddRecipePage)
   const schema = {
     type: "object",
     required: ["title", "ingredients", "instructions", "cookingTime"],
@@ -52,7 +51,6 @@ const EditRecipePage = () => {
     }
   };
 
-  // UI Schema for better form layout
   const uiSchema = {
     title: {
       "ui:placeholder": "Enter recipe title (e.g., Spaghetti Carbonara)"
@@ -82,12 +80,10 @@ const EditRecipePage = () => {
     }
   };
 
-  // Custom widgets
   const widgets = {
     imageUpload: ImageUploadWidget
   };
 
-  // Fetch recipe data on component mount
   useEffect(() => {
     const loadRecipe = async () => {
       try {
@@ -95,7 +91,6 @@ const EditRecipePage = () => {
         const result = await fetchRecipeById(id);
         
         if (result.success) {
-          // Get the current recipe from the store
           const { currentRecipe } = useRecipeStore.getState();
           console.log('Loaded recipe data:', currentRecipe);
           setInitialData(currentRecipe);
@@ -111,13 +106,11 @@ const EditRecipePage = () => {
       loadRecipe();
     }
 
-    // Cleanup
     return () => {
       clearCurrentRecipe();
     };
   }, [id, fetchRecipeById, clearCurrentRecipe, navigate]);
 
-  // Form submission handler
   const handleSubmit = async ({ formData }) => {
     setLoading(true);
 

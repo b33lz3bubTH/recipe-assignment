@@ -18,7 +18,6 @@ const useRecipeStore = create((set, get) => ({
   // Actions
   setLoading: (loading) => set({ loading }),
 
-  // Fetch all recipes with pagination and search
   fetchRecipes: async (params = {}) => {
     const state = get();
     console.log(`fetching from backend: `);
@@ -66,7 +65,6 @@ const useRecipeStore = create((set, get) => ({
     }
   },
 
-  // Fetch a single recipe by ID
   fetchRecipeById: async (id) => {
     set({ loading: true });
     try {
