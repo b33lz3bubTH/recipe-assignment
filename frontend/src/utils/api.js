@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { showApiError } from './toast';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -65,8 +66,14 @@ api.interceptors.response.use(
       } catch (refreshError) {
         // If refresh fails, redirect to login
         localStorage.removeItem('auth-storage');
+        showApiError('Session expired. Please login again.');
         window.location.href = '/login';
       }
+    }
+
+    // Don't show toast for 401 errors as they're handled above
+    if (error.response?.status !== 401) {
+      showApiError(error);
     }
 
     return Promise.reject(error);

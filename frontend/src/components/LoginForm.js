@@ -1,21 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import { showValidationError } from '../utils/toast';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const [errors, setErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({});
   
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const { login, isLoading } = useAuthStore();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Clear any existing errors when component mounts
-    clearError();
-  }, [clearError]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -32,8 +28,14 @@ const LoginForm = () => {
       newErrors.password = 'Password must be at least 6 characters';
     }
     
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setFieldErrors(newErrors);
+    
+    if (Object.keys(newErrors).length > 0) {
+      showValidationError(newErrors);
+      return false;
+    }
+    
+    return true;
   };
 
   const handleChange = (e) => {
@@ -43,9 +45,9 @@ const LoginForm = () => {
       [name]: value
     }));
     
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
+    // Clear field error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({
         ...prev,
         [name]: ''
       }));
@@ -73,12 +75,6 @@ const LoginForm = () => {
             <div className="card-body">
               <h2 className="card-title text-center mb-4">Login</h2>
               
-              {error && (
-                <div className="alert alert-danger" role="alert">
-                  {error}
-                </div>
-              )}
-              
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">
@@ -86,7 +82,7 @@ const LoginForm = () => {
                   </label>
                   <input
                     type="email"
-                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                    className={`form-control ${fieldErrors.email ? 'is-invalid' : ''}`}
                     id="email"
                     name="email"
                     value={formData.email}
@@ -94,9 +90,9 @@ const LoginForm = () => {
                     placeholder="Enter your email"
                     disabled={isLoading}
                   />
-                  {errors.email && (
+                  {fieldErrors.email && (
                     <div className="invalid-feedback">
-                      {errors.email}
+                      {fieldErrors.email}
                     </div>
                   )}
                 </div>
@@ -107,7 +103,7 @@ const LoginForm = () => {
                   </label>
                   <input
                     type="password"
-                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                    className={`form-control ${fieldErrors.password ? 'is-invalid' : ''}`}
                     id="password"
                     name="password"
                     value={formData.password}
@@ -115,9 +111,9 @@ const LoginForm = () => {
                     placeholder="Enter your password"
                     disabled={isLoading}
                   />
-                  {errors.password && (
+                  {fieldErrors.password && (
                     <div className="invalid-feedback">
-                      {errors.password}
+                      {fieldErrors.password}
                     </div>
                   )}
                 </div>

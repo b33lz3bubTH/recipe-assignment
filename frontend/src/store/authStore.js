@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import api from '../utils/api';
+import { showToast, showApiError } from '../utils/toast';
 
 const useAuthStore = create(
   persist(
@@ -11,16 +12,13 @@ const useAuthStore = create(
       refreshToken: null,
       isAuthenticated: false,
       isLoading: false,
-      error: null,
 
       // Actions
       setLoading: (loading) => set({ isLoading: loading }),
-      setError: (error) => set({ error }),
-      clearError: () => set({ error: null }),
 
       // Register user
       register: async (userData) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true });
         try {
           const response = await api.post('/auth/register', userData);
           const { user, tokens } = response.data.data;
@@ -30,24 +28,21 @@ const useAuthStore = create(
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
             isAuthenticated: true,
-            isLoading: false,
-            error: null
+            isLoading: false
           });
           
+          showToast.success('Registration successful! Welcome to Recipe App.');
           return { success: true };
         } catch (error) {
-          const errorMessage = error.response?.data?.message || 'Registration failed';
-          set({
-            isLoading: false,
-            error: errorMessage
-          });
-          return { success: false, error: errorMessage };
+          set({ isLoading: false });
+          showApiError(error);
+          return { success: false };
         }
       },
 
       // Login user
       login: async (credentials) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true });
         try {
           const response = await api.post('/auth/login', credentials);
           const { user, tokens } = response.data.data;
@@ -57,18 +52,15 @@ const useAuthStore = create(
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
             isAuthenticated: true,
-            isLoading: false,
-            error: null
+            isLoading: false
           });
           
+          showToast.success(`Welcome back, ${user.username}!`);
           return { success: true };
         } catch (error) {
-          const errorMessage = error.response?.data?.message || 'Login failed';
-          set({
-            isLoading: false,
-            error: errorMessage
-          });
-          return { success: false, error: errorMessage };
+          set({ isLoading: false });
+          showApiError(error);
+          return { success: false };
         }
       },
 
@@ -79,19 +71,28 @@ const useAuthStore = create(
           accessToken: null,
           refreshToken: null,
           isAuthenticated: false,
-          isLoading: false,
-          error: null
+          isLoading: false
         });
         
         // Clear localStorage
         localStorage.removeItem('auth-storage');
+        showToast.info('You have been logged out successfully.');
       },
 
       // Initialize auth state from localStorage
       initializeAuth: () => {
         const { accessToken, user } = get();
         if (accessToken && user) {
-          // Token will be automatically added by the API interceptor
+          // Set isAuthenticated to true if we have both token and user
+          set({ isAuthenticated: true });
+        } else {
+          // Clear any invalid state
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false
+          });
         }
       },
 

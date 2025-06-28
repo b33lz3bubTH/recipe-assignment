@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import { showValidationError } from '../utils/toast';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -9,15 +10,10 @@ const RegisterForm = () => {
     password: '',
     confirmPassword: ''
   });
-  const [errors, setErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({});
   
-  const { register, isLoading, error, clearError } = useAuthStore();
+  const { register, isLoading } = useAuthStore();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Clear any existing errors when component mounts
-    clearError();
-  }, [clearError]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -46,8 +42,14 @@ const RegisterForm = () => {
       newErrors.confirmPassword = 'Passwords do not match';
     }
     
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setFieldErrors(newErrors);
+    
+    if (Object.keys(newErrors).length > 0) {
+      showValidationError(newErrors);
+      return false;
+    }
+    
+    return true;
   };
 
   const handleChange = (e) => {
@@ -57,9 +59,9 @@ const RegisterForm = () => {
       [name]: value
     }));
     
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
+    // Clear field error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({
         ...prev,
         [name]: ''
       }));
@@ -90,12 +92,6 @@ const RegisterForm = () => {
             <div className="card-body">
               <h2 className="card-title text-center mb-4">Register</h2>
               
-              {error && (
-                <div className="alert alert-danger" role="alert">
-                  {error}
-                </div>
-              )}
-              
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">
@@ -103,7 +99,7 @@ const RegisterForm = () => {
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${errors.username ? 'is-invalid' : ''}`}
+                    className={`form-control ${fieldErrors.username ? 'is-invalid' : ''}`}
                     id="username"
                     name="username"
                     value={formData.username}
@@ -111,9 +107,9 @@ const RegisterForm = () => {
                     placeholder="Enter your username"
                     disabled={isLoading}
                   />
-                  {errors.username && (
+                  {fieldErrors.username && (
                     <div className="invalid-feedback">
-                      {errors.username}
+                      {fieldErrors.username}
                     </div>
                   )}
                 </div>
@@ -124,7 +120,7 @@ const RegisterForm = () => {
                   </label>
                   <input
                     type="email"
-                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                    className={`form-control ${fieldErrors.email ? 'is-invalid' : ''}`}
                     id="email"
                     name="email"
                     value={formData.email}
@@ -132,9 +128,9 @@ const RegisterForm = () => {
                     placeholder="Enter your email"
                     disabled={isLoading}
                   />
-                  {errors.email && (
+                  {fieldErrors.email && (
                     <div className="invalid-feedback">
-                      {errors.email}
+                      {fieldErrors.email}
                     </div>
                   )}
                 </div>
@@ -145,7 +141,7 @@ const RegisterForm = () => {
                   </label>
                   <input
                     type="password"
-                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                    className={`form-control ${fieldErrors.password ? 'is-invalid' : ''}`}
                     id="password"
                     name="password"
                     value={formData.password}
@@ -153,9 +149,9 @@ const RegisterForm = () => {
                     placeholder="Enter your password"
                     disabled={isLoading}
                   />
-                  {errors.password && (
+                  {fieldErrors.password && (
                     <div className="invalid-feedback">
-                      {errors.password}
+                      {fieldErrors.password}
                     </div>
                   )}
                 </div>
@@ -166,7 +162,7 @@ const RegisterForm = () => {
                   </label>
                   <input
                     type="password"
-                    className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                    className={`form-control ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
                     id="confirmPassword"
                     name="confirmPassword"
                     value={formData.confirmPassword}
@@ -174,9 +170,9 @@ const RegisterForm = () => {
                     placeholder="Confirm your password"
                     disabled={isLoading}
                   />
-                  {errors.confirmPassword && (
+                  {fieldErrors.confirmPassword && (
                     <div className="invalid-feedback">
-                      {errors.confirmPassword}
+                      {fieldErrors.confirmPassword}
                     </div>
                   )}
                 </div>

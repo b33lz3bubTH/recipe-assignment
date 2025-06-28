@@ -22,10 +22,10 @@ export const createRecipeSchema = {
     ).required().messages({
       "alternatives.any": "Cooking time must be a string or positive number",
     }),
-    imageUrl: Joi.string().uri().optional().allow("").messages({
+    imageUrl: Joi.string().optional().allow("").messages({
       "string.uri": "Image URL must be a valid URL",
     }),
-  }),
+  }).unknown(true),
 };
 
 export const updateRecipeSchema = {
@@ -48,10 +48,12 @@ export const updateRecipeSchema = {
     ).optional().messages({
       "alternatives.any": "Cooking time must be a string or positive number",
     }),
-    imageUrl: Joi.string().uri().optional().allow("").messages({
+    imageUrl: Joi.string().optional().allow("").messages({
       "string.uri": "Image URL must be a valid URL",
     }),
-  }),
+    _id: Joi.string().optional().allow("").messages({
+    }),
+  }).unknown(true),
 };
 
 export const getRecipesSchema = {
