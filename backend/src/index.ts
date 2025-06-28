@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { MongoDataSource } from './datasource/mongo.datasource';
 import { appConfig } from './config';
 import authRoutes from './routes/auth.routes';
@@ -14,6 +15,7 @@ async function startServer() {
 
     app.use(express.json());
     // need cors, here
+    app.use(cors());
 
     // Routes
     app.use('/api/auth', authRoutes);
