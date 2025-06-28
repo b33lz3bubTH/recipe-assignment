@@ -98,7 +98,47 @@ const upload = multer({
   }
 });
 
-// Export the upload middleware with error handling wrapper
+// Export the raw multer middleware for use in routes
+export const uploadImageMiddleware = upload.single('file');
+
+// Multer error handling middleware
+export const handleMulterErrors = (err: any, req: Request, res: any, next: any) => {
+  if (err instanceof multer.MulterError) {
+    switch (err.code) {
+      case 'LIMIT_FILE_SIZE':
+        return res.status(400).json({
+          statusCode: 400,
+          message: 'File size too large. Maximum size is 5MB',
+          success: false
+        });
+      case 'LIMIT_FILE_COUNT':
+        return res.status(400).json({
+          statusCode: 400,
+          message: 'Too many files. Only one file allowed',
+          success: false
+        });
+      default:
+        return res.status(400).json({
+          statusCode: 400,
+          message: `Upload error: ${err.message}`,
+          success: false
+        });
+    }
+  }
+  
+  // Handle other errors
+  if (err) {
+    return res.status(400).json({
+      statusCode: 400,
+      message: err.message || 'Upload failed',
+      success: false
+    });
+  }
+  
+  next();
+};
+
+// Export the upload middleware with error handling wrapper (for backward compatibility)
 export const uploadImage = (req: Request, res: any, next: any) => {
   upload.single('file')(req, res, (err: any) => {
     if (err) {

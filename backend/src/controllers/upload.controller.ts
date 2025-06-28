@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import multer from 'multer';
-import { uploadImage, getFileInfo, validateFileExists, UploadedFileInfo } from '../plugins/upload.plugin';
+import { getFileInfo, validateFileExists, UploadedFileInfo } from '../plugins/upload.plugin';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiResponse } from '../utils/ApiResponse';
 import { ApiError } from '../utils/ApiError';
@@ -12,68 +12,48 @@ class UploadController {
    * Upload an image file
    */
   uploadImage = asyncHandler(async (req: Request, res: Response) => {
-    // Use multer middleware with error handling
-    uploadImage(req, res, async (err: any) => {
-      try {
-        if (err) {
-          // Handle multer errors
-          if (err instanceof multer.MulterError) {
-            switch (err.code) {
-              case 'LIMIT_FILE_SIZE':
-                throw new ApiError(400, 'File size too large. Maximum size is 5MB');
-              case 'LIMIT_FILE_COUNT':
-                throw new ApiError(400, 'Too many files. Only one file allowed');
-              default:
-                throw new ApiError(400, `Upload error: ${err.message}`);
-            }
-          }
-          
-          // Handle other errors
-          throw new ApiError(400, err.message || 'Upload failed');
-        }
-
-        // Validate that file was uploaded
-        if (!req.file) {
-          throw new ApiError(400, 'No file uploaded');
-        }
-
-        // Additional validation
-        if (!req.file.filename || !req.file.mimetype || !req.file.originalname) {
-          throw new ApiError(400, 'Invalid file information received');
-        }
-
-        // Validate file exists on disk
-        const uploadsDir = path.join(process.cwd(), 'uploads');
-        const filePath = path.join(uploadsDir, req.file.filename);
-        
-        if (!fs.existsSync(filePath)) {
-          throw new ApiError(500, 'File was not saved properly');
-        }
-
-        // Get file info with validation
-        const fileInfo: UploadedFileInfo = getFileInfo(req.file);
-
-        res.status(200).json(
-          new ApiResponse(200, fileInfo, 'File uploaded successfully')
-        );
-      } catch (error) {
-        // Clean up any partially uploaded file
-        if (req.file && req.file.filename) {
-          try {
-            const uploadsDir = path.join(process.cwd(), 'uploads');
-            const filePath = path.join(uploadsDir, req.file.filename);
-            if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath);
-            }
-          } catch (cleanupError) {
-            console.error('Failed to cleanup uploaded file:', cleanupError);
-          }
-        }
-        
-        // Re-throw the error to be handled by asyncHandler
-        throw error;
+    try {
+      // Validate that file was uploaded
+      if (!req.file) {
+        throw new ApiError(400, 'No file uploaded');
       }
-    });
+
+      // Additional validation
+      if (!req.file.filename || !req.file.mimetype || !req.file.originalname) {
+        throw new ApiError(400, 'Invalid file information received');
+      }
+
+      // Validate file exists on disk
+      const uploadsDir = path.join(process.cwd(), 'uploads');
+      const filePath = path.join(uploadsDir, req.file.filename);
+      
+      if (!fs.existsSync(filePath)) {
+        throw new ApiError(500, 'File was not saved properly');
+      }
+
+      // Get file info with validation
+      const fileInfo: UploadedFileInfo = getFileInfo(req.file);
+
+      res.status(200).json(
+        new ApiResponse(200, fileInfo, 'File uploaded successfully')
+      );
+    } catch (error) {
+      // Clean up any partially uploaded file
+      if (req.file && req.file.filename) {
+        try {
+          const uploadsDir = path.join(process.cwd(), 'uploads');
+          const filePath = path.join(uploadsDir, req.file.filename);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        } catch (cleanupError) {
+          console.error('Failed to cleanup uploaded file:', cleanupError);
+        }
+      }
+      
+      // Re-throw the error to be handled by asyncHandler
+      throw error;
+    }
   });
 
   /**

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { uploadController } from '../controllers/upload.controller';
+import { uploadImageMiddleware, handleMulterErrors } from '../plugins/upload.plugin';
 
 const router = Router();
 
@@ -8,7 +9,7 @@ const router = Router();
  * @desc    Upload an image file (JPEG, JPG, PNG)
  * @access  Public
  */
-router.post('/image', uploadController.uploadImage);
+router.post('/image', uploadImageMiddleware, handleMulterErrors, uploadController.uploadImage);
 
 /**
  * @route   GET /api/upload/file
