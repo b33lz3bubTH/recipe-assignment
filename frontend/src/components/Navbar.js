@@ -32,11 +32,11 @@ const Navbar = () => {
         
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to="/toast-demo">
                 Toast Demo
               </Link>
-            </li>
+            </li> */}
             {isAuthenticated && (
               <>
                 <li className="nav-item">
