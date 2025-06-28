@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import useRecipeStore from '../store/recipeStore';
 import useAuthStore from '../store/authStore';
+import { formatImageUrl } from '../utils/imageUtils';
 
 const RecipeDetailPage = () => {
   const { id } = useParams();
@@ -83,7 +84,7 @@ const RecipeDetailPage = () => {
         <div className="col-lg-6 mb-4">
           {currentRecipe.imageUrl ? (
             <img
-              src={currentRecipe.imageUrl}
+              src={formatImageUrl(currentRecipe.imageUrl)}
               className="img-fluid rounded shadow"
               alt={currentRecipe.title}
               style={{ width: '100%', maxHeight: '500px', objectFit: 'cover' }}

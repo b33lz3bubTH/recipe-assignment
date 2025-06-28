@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Form from '@rjsf/core';
+import Form from '@rjsf/bootstrap-4';
 import validator from '@rjsf/validator-ajv8';
 import api from '../utils/api';
 import { showToast, showApiError } from '../utils/toast';
 import ImageUploadWidget from '../components/ImageUploadWidget';
+import CustomRJSFTheme from '../components/CustomRJSFTheme';
 
 const AddRecipePage = () => {
   const navigate = useNavigate();
@@ -121,45 +122,47 @@ const AddRecipePage = () => {
           {/* Recipe Form */}
           <div className="card border-0 shadow-sm">
             <div className="card-body p-4">
-              <Form
-                schema={schema}
-                uiSchema={uiSchema}
-                validator={validator}
-                widgets={widgets}
-                onSubmit={handleSubmit}
-                disabled={loading}
-              >
-                <div className="d-flex gap-3 justify-content-end">
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => navigate('/')}
-                    disabled={loading}
-                  >
-                    <i className="fas fa-times me-1"></i>
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <div className="spinner-border spinner-border-sm me-2" role="status">
-                          <span className="visually-hidden">Loading...</span>
-                        </div>
-                        Creating Recipe...
-                      </>
-                    ) : (
-                      <>
-                        <i className="fas fa-save me-1"></i>
-                        Create Recipe
-                      </>
-                    )}
-                  </button>
-                </div>
-              </Form>
+              <CustomRJSFTheme>
+                <Form
+                  schema={schema}
+                  uiSchema={uiSchema}
+                  validator={validator}
+                  widgets={widgets}
+                  onSubmit={handleSubmit}
+                  disabled={loading}
+                >
+                  <div className="d-flex gap-3 justify-content-end">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => navigate('/')}
+                      disabled={loading}
+                    >
+                      <i className="fas fa-times me-1"></i>
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <div className="spinner-border spinner-border-sm me-2" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                          Creating Recipe...
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-save me-1"></i>
+                          Create Recipe
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </Form>
+              </CustomRJSFTheme>
             </div>
           </div>
 

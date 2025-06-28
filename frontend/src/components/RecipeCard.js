@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatImageUrl } from '../utils/imageUtils';
 
 const RecipeCard = ({ recipe }) => {
   const formatDate = (dateString) => {
@@ -21,7 +22,7 @@ const RecipeCard = ({ recipe }) => {
         <div className="position-relative">
           {recipe.imageUrl ? ( 
             <img
-              src={recipe.imageUrl}
+              src={formatImageUrl(recipe.imageUrl)}
               className="card-img-top"
               alt={recipe.title}
               style={{ height: '200px', objectFit: 'cover' }}

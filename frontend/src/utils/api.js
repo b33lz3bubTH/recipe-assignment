@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { showApiError } from './toast';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = 'https://recipe-assignment-production.up.railway.app/api';
 
 // Create axios instance
 const api = axios.create({

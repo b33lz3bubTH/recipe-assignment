@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import api from '../utils/api';
 import { showToast, showApiError } from '../utils/toast';
+import { formatImageUrl } from '../utils/imageUtils';
 
 const ImageUploadWidget = ({ id, value, onChange, disabled, readonly }) => {
   const [uploading, setUploading] = useState(false);
-  const [preview, setPreview] = useState(value ? `http://localhost:3000/uploads/${value}` : null);
+  const [preview, setPreview] = useState(value ? formatImageUrl(value) : null);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -47,8 +48,8 @@ const ImageUploadWidget = ({ id, value, onChange, disabled, readonly }) => {
       // Update the form value with the filename
       onChange(filename);
       
-      // Set preview
-      setPreview(`http://localhost:3000/uploads/${filename}`);
+      // Set preview using the formatted URL
+      setPreview(formatImageUrl(filename));
       
       showToast.success('Image uploaded successfully!');
     } catch (error) {
