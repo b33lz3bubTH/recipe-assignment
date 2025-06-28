@@ -4,6 +4,7 @@ import { appConfig } from './config';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import recipeRoutes from './routes/recipes.routes';
+import uploadRoutes from './routes/upload.routes';
 import { errors as celebrateErrors } from 'celebrate';
 
 async function startServer() {
@@ -18,6 +19,7 @@ async function startServer() {
     app.use('/api/auth', authRoutes);
     app.use('/api/users', userRoutes);
     app.use('/api/recipes', recipeRoutes);
+    app.use('/api/upload', uploadRoutes);
 
     // Health check endpoint
     app.get('/health-check', (req, res) => {
@@ -53,6 +55,9 @@ async function startServer() {
       console.log(`   DELETE /api/recipes/:id - Delete recipe (protected)`);
       console.log(`   GET /api/recipes/search/ingredients - Search by ingredients (public)`);
       console.log(`   GET /api/recipes/search/cooking-time - Search by cooking time (public)`);
+      console.log(`   POST /api/upload/image - Upload image file (public)`);
+      console.log(`   GET /api/upload/file?file=filename - Serve uploaded file (public)`);
+      console.log(`   GET /api/upload/files - List uploaded files (public)`);
       console.log(`   GET /health-check - Health check`);
     });
 
