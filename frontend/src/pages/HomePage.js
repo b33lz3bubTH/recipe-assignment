@@ -29,7 +29,7 @@ const HomePage = () => {
   }, [fetchRecipes]);
 
   const loadUnauthenticatedRecipes = useCallback(async () => {
-    await fetchRecipes({ page: 1, limit: 5 });
+    await fetchRecipes({ page: 1, limit: 3 });
   }, [fetchRecipes]);
 
   // Load recipes on mount and when auth status changes
@@ -68,7 +68,8 @@ const HomePage = () => {
   }, [isAuthenticated, changePage]);
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 my-5">
+      <div style={{width: '100%', marginTop: '10em'}}></div>
       {/* Header Section */}
       <div className="row mb-5">
         <div className="col-12 text-center">

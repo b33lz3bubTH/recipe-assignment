@@ -146,6 +146,8 @@ const EditRecipePage = () => {
 
   return (
     <div className="container mt-5">
+      <div style={{width: '100%', marginTop: '10em'}}></div>
+
       <div className="row justify-content-center">
         <div className="col-lg-8">
           {/* Header */}

@@ -66,6 +66,7 @@ const RecipeDetailPage = () => {
 
   return (
     <div className="container mt-5">
+      <div style={{width: '100%', marginTop: '10em'}}></div>
       {/* Back Button */}
       <div className="row mb-4">
         <div className="col-12">
