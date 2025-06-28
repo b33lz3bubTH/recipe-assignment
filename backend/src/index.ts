@@ -14,7 +14,6 @@ async function startServer() {
     const port = process.env.PORT || 3000;
 
     app.use(express.json());
-    // need cors, here
     app.use(cors());
 
     // Routes
@@ -23,7 +22,6 @@ async function startServer() {
     app.use('/api/recipes', recipeRoutes);
     app.use('/api/upload', uploadRoutes);
 
-    // Health check endpoint
     app.get('/health-check', (req, res) => {
       res.json({ status: 'OK', message: 'Server is running' });
     });
@@ -43,24 +41,24 @@ async function startServer() {
     app.listen(port, async () => {
       await new MongoDataSource(appConfig.mongoURI).init();
       console.log(`🚀 Server ready at http://localhost:${port}`);
-      console.log(`📝 API Documentation:`);
-      console.log(`   POST /api/auth/register - Register a new user`);
-      console.log(`   POST /api/auth/login - Login user`);
-      console.log(`   POST /api/auth/refresh - Refresh access token`);
-      console.log(`   POST /api/auth/verify - Verify token`);
-      console.log(`   GET /api/users/profile - Get user profile (protected)`);
-      console.log(`   PUT /api/users/profile - Update user profile (protected)`);
-      console.log(`   GET /api/recipes - Get all recipes (public)`);
-      console.log(`   POST /api/recipes - Create recipe (protected)`);
-      console.log(`   GET /api/recipes/:id - Get recipe by ID (public)`);
-      console.log(`   PUT /api/recipes/:id - Update recipe (protected)`);
-      console.log(`   DELETE /api/recipes/:id - Delete recipe (protected)`);
-      console.log(`   GET /api/recipes/search/ingredients - Search by ingredients (public)`);
-      console.log(`   GET /api/recipes/search/cooking-time - Search by cooking time (public)`);
-      console.log(`   POST /api/upload/image - Upload image file (public)`);
-      console.log(`   GET /api/upload/file?file=filename - Serve uploaded file (public)`);
-      console.log(`   GET /api/upload/files - List uploaded files (public)`);
-      console.log(`   GET /health-check - Health check`);
+      // console.log(`📝 API Documentation:`);
+      // console.log(`   POST /api/auth/register - Register a new user`);
+      // console.log(`   POST /api/auth/login - Login user`);
+      // console.log(`   POST /api/auth/refresh - Refresh access token`);
+      // console.log(`   POST /api/auth/verify - Verify token`);
+      // console.log(`   GET /api/users/profile - Get user profile (protected)`);
+      // console.log(`   PUT /api/users/profile - Update user profile (protected)`);
+      // console.log(`   GET /api/recipes - Get all recipes (public)`);
+      // console.log(`   POST /api/recipes - Create recipe (protected)`);
+      // console.log(`   GET /api/recipes/:id - Get recipe by ID (public)`);
+      // console.log(`   PUT /api/recipes/:id - Update recipe (protected)`);
+      // console.log(`   DELETE /api/recipes/:id - Delete recipe (protected)`);
+      // console.log(`   GET /api/recipes/search/ingredients - Search by ingredients (public)`);
+      // console.log(`   GET /api/recipes/search/cooking-time - Search by cooking time (public)`);
+      // console.log(`   POST /api/upload/image - Upload image file (public)`);
+      // console.log(`   GET /api/upload/file?file=filename - Serve uploaded file (public)`);
+      // console.log(`   GET /api/upload/files - List uploaded files (public)`);
+      // console.log(`   GET /health-check - Health check`);
     });
 
   } catch (error) {

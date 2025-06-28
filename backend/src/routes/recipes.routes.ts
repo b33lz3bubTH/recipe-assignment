@@ -17,11 +17,6 @@ import {
 
 const router = Router();
 
-/**
- * @route   POST /api/recipes
- * @desc    Create a new recipe
- * @access  Private (requires authentication)
- */
 router.post(
   "/",
   authenticateToken,
@@ -41,11 +36,7 @@ router.post(
   })
 );
 
-/**
- * @route   GET /api/recipes
- * @desc    Get all recipes with pagination and search
- * @access  Public
- */
+
 router.get(
   "/",
   celebrate(getRecipesSchema),
@@ -66,11 +57,7 @@ router.get(
   })
 );
 
-/**
- * @route   GET /api/recipes/:id
- * @desc    Get recipe by ID
- * @access  Public
- */
+
 router.get(
   "/:id",
   celebrate(getRecipeByIdSchema),
@@ -84,11 +71,6 @@ router.get(
   })
 );
 
-/**
- * @route   PUT /api/recipes/:id
- * @desc    Update recipe by ID
- * @access  Private (requires authentication)
- */
 router.put(
   "/:id",
   authenticateToken,
@@ -109,11 +91,7 @@ router.put(
   })
 );
 
-/**
- * @route   DELETE /api/recipes/:id
- * @desc    Delete recipe by ID
- * @access  Private (requires authentication)
- */
+
 router.delete(
   "/:id",
   authenticateToken,
@@ -129,11 +107,7 @@ router.delete(
   })
 );
 
-/**
- * @route   GET /api/recipes/search/ingredients
- * @desc    Search recipes by ingredients
- * @access  Public
- */
+
 router.get(
   "/search/ingredients",
   celebrate(searchByIngredientsSchema),
@@ -149,11 +123,6 @@ router.get(
   })
 );
 
-/**
- * @route   GET /api/recipes/search/cooking-time
- * @desc    Get recipes by cooking time range
- * @access  Public
- */
 router.get(
   "/search/cooking-time",
   celebrate(getRecipesByCookingTimeSchema),

@@ -6,7 +6,6 @@ import { registerSchema, loginSchema, refreshSchema, verifySchema } from '../val
 const router = Router();
 const usersService = new UsersService();
 
-// Registration endpoint
 router.post('/register', celebrate(registerSchema), async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
@@ -32,7 +31,6 @@ router.post('/register', celebrate(registerSchema), async (req: Request, res: Re
   }
 });
 
-// Login endpoint
 router.post('/login', celebrate(loginSchema), async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -58,7 +56,6 @@ router.post('/login', celebrate(loginSchema), async (req: Request, res: Response
   }
 });
 
-// Refresh token endpoint
 router.post('/refresh', celebrate(refreshSchema), async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
@@ -84,7 +81,6 @@ router.post('/refresh', celebrate(refreshSchema), async (req: Request, res: Resp
   }
 });
 
-// Verify token endpoint
 router.post('/verify', celebrate(verifySchema), async (req: Request, res: Response) => {
   try {
     const { token } = req.body;

@@ -4,7 +4,6 @@ import path from 'path';
 import { Request } from 'express';
 import fs from 'fs';
 
-// Define allowed file types with more comprehensive list
 const allowedMimeTypes = [
   'image/jpeg', 
   'image/jpg', 
@@ -13,10 +12,8 @@ const allowedMimeTypes = [
   'image/webp'
 ];
 
-// Define allowed file extensions
 const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
 
-// Ensure uploads directory exists
 const ensureUploadsDir = () => {
   const uploadsDir = path.join(process.cwd(), 'uploads');
   if (!fs.existsSync(uploadsDir)) {
@@ -25,7 +22,6 @@ const ensureUploadsDir = () => {
   return uploadsDir;
 };
 
-// Configure storage with error handling
 const storage = multer.diskStorage({
   destination: (req: Request, file: Express.Multer.File, cb) => {
     try {
@@ -37,13 +33,11 @@ const storage = multer.diskStorage({
   },
   filename: (req: Request, file: Express.Multer.File, cb) => {
     try {
-      // Validate file extension
       const fileExtension = path.extname(file.originalname).toLowerCase();
       if (!allowedExtensions.includes(fileExtension)) {
         return cb(new Error('Invalid file extension'), '');
       }
 
-      // Generate unique filename with UUID
       const uniqueName = uuidv4();
       const filename = `${uniqueName}${fileExtension}`;
       cb(null, filename);
@@ -53,31 +47,25 @@ const storage = multer.diskStorage({
   }
 });
 
-// Enhanced file filter function with better validation
 const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   try {
-    // Check if file exists
     if (!file) {
       return cb(new Error('No file provided'));
     }
 
-    // Validate mimetype
     if (!file.mimetype || !allowedMimeTypes.includes(file.mimetype)) {
       return cb(new Error(`Invalid file type. Allowed types: ${allowedMimeTypes.join(', ')}`));
     }
 
-    // Validate original filename
     if (!file.originalname || file.originalname.trim() === '') {
       return cb(new Error('Invalid filename'));
     }
 
-    // Check file extension
     const fileExtension = path.extname(file.originalname).toLowerCase();
     if (!allowedExtensions.includes(fileExtension)) {
       return cb(new Error(`Invalid file extension. Allowed extensions: ${allowedExtensions.join(', ')}`));
     }
 
-    // Additional security checks
     if (file.originalname.includes('..') || file.originalname.includes('/') || file.originalname.includes('\\')) {
       return cb(new Error('Invalid filename contains path traversal characters'));
     }
@@ -88,7 +76,6 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
   }
 };
 
-// Configure multer with comprehensive error handling
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
@@ -98,10 +85,8 @@ const upload = multer({
   }
 });
 
-// Export the raw multer middleware for use in routes
 export const uploadImageMiddleware = upload.single('file');
 
-// Multer error handling middleware
 export const handleMulterErrors = (err: any, req: Request, res: any, next: any) => {
   if (err instanceof multer.MulterError) {
     switch (err.code) {
@@ -126,7 +111,6 @@ export const handleMulterErrors = (err: any, req: Request, res: any, next: any) 
     }
   }
   
-  // Handle other errors
   if (err) {
     return res.status(400).json({
       statusCode: 400,
@@ -138,7 +122,6 @@ export const handleMulterErrors = (err: any, req: Request, res: any, next: any) 
   next();
 };
 
-// Export the upload middleware with error handling wrapper (for backward compatibility)
 export const uploadImage = (req: Request, res: any, next: any) => {
   upload.single('file')(req, res, (err: any) => {
     if (err) {
@@ -154,7 +137,6 @@ export const uploadImage = (req: Request, res: any, next: any) => {
         }
       }
       
-      // Handle other errors
       return next(err);
     }
     
@@ -162,14 +144,12 @@ export const uploadImage = (req: Request, res: any, next: any) => {
   });
 };
 
-// Export file information interface
 export interface UploadedFileInfo {
   filename: string;
   mimetype: string;
   originalName: string;
 }
 
-// Helper function to get file info with validation
 export const getFileInfo = (file: Express.Multer.File): UploadedFileInfo => {
   try {
     if (!file) {
@@ -190,13 +170,11 @@ export const getFileInfo = (file: Express.Multer.File): UploadedFileInfo => {
   }
 };
 
-// Helper function to validate file exists and is accessible
 export const validateFileExists = (filename: string): boolean => {
   try {
     const uploadsDir = path.join(process.cwd(), 'uploads');
     const filePath = path.join(uploadsDir, filename);
     
-    // Check if file exists and is accessible
     return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
   } catch (error) {
     return false;

@@ -56,7 +56,6 @@ export const optionalAuth = async (
     
     next();
   } catch (error) {
-    // Continue without authentication if token is invalid
     next();
   }
 }; 

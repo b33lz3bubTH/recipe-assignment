@@ -5,7 +5,6 @@ import { UsersService } from '../services/users';
 const router = Router();
 const usersService = new UsersService();
 
-// Protected route - Get current user profile
 router.get('/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     if (!req.user) {
@@ -35,7 +34,6 @@ router.get('/profile', authenticateToken, async (req: AuthenticatedRequest, res:
   }
 });
 
-// Protected route - Update user profile
 router.put('/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     if (!req.user) {
@@ -56,8 +54,6 @@ router.put('/profile', authenticateToken, async (req: AuthenticatedRequest, res:
       return;
     }
 
-    // Here you would typically update the user in the database
-    // For now, we'll just return the current user data
     res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
